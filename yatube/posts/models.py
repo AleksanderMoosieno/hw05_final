@@ -16,7 +16,7 @@ class Group(models.Model):
 
 class Post(models.Model):
     text = models.TextField(help_text='Текст нового поста')
-    pub_date = models.DateTimeField(auto_now_add=True)
+    pub_date = models.DateTimeField(auto_now_add=True, db_index=True)
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

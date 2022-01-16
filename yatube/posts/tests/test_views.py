@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from django.core.cache import cache
 
 from ..models import Group, Post
 
@@ -62,6 +63,7 @@ class PostViewsTest(TestCase):
 
     def test_pages_use_correct_templates(self):
         """URL-адрес использует корректный шаблон."""
+        cache.clear()
         templates_pages_names = {
             reverse('posts:index'): 'posts/index.html',
             reverse('posts:group_list', args=[PostViewsTest.group.slug]):
@@ -82,6 +84,7 @@ class PostViewsTest(TestCase):
 
     def test_new_post_appears_on_pages(self):
         """Новый пост отображается на страницах index, group, profile"""
+        cache.clear()
         expected_context = self.post
         urls_pages = [
             reverse('posts:index'),
@@ -108,6 +111,7 @@ class PostViewsTest(TestCase):
 
     def test_index_page_uses_correct_context(self):
         """Шаблон главной страницы сформирован с правильным контекстом."""
+        cache.clear()
         response = self.authorized_client.get(reverse('posts:index'))
         index_post = response.context['page_obj'][0]
         self.check_post_context_on_page(index_post)
@@ -194,6 +198,7 @@ class PaginatorViewsTest(TestCase):
 
     def test_paginator_for_index_profile_group(self):
         """Паджинатор на страницах index, profile, group работает корректно."""
+        cache.clear()
         first_page_len = settings.CONST
         second_page_len = len(self.posts) - settings.CONST
         if second_page_len > settings.CONST:

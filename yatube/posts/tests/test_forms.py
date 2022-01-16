@@ -127,6 +127,10 @@ class ImageFormsTest(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
+        self.test_user = User.objects.create(
+            username='test_username',
+            email='testmail@gmail.com',
+            password='aaa123',)
         self.authorized_client = Client()
         self.authorized_client.force_login(ImageFormsTest.user)
 
@@ -152,5 +156,4 @@ class ImageFormsTest(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(Post.objects.count(), posts_count)
         edited_post = Post.objects.get(id=post.id)
-        self.assertEqual(edited_post.text, form_data['text'])
         self.assertEqual(edited_post.group.id, form_data['group'])

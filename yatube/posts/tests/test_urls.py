@@ -3,6 +3,7 @@ from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
+from django.core.cache import cache
 
 from ..models import Group, Post
 
@@ -53,6 +54,7 @@ class PostURLTests(TestCase):
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон,
         для неавторизованного пользователя"""
+        cache.clear()
         templates_url_names = {
             '/': 'posts/index.html',
             f'/group/{self.group.slug}/': 'posts/group_list.html',

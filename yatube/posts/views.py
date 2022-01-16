@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
 
+
 from .utils import get_page_context
 from .models import Group, Post, User, Follow
 from .forms import PostForm, CommentForm
