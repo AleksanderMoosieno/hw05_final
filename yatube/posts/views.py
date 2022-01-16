@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 from .utils import get_page_context
 from .models import Group, Post, User, Follow
 from .forms import PostForm, CommentForm
 
 
+@cache_page(20)
 def index(request):
     post_list = Post.objects.all()
     context = {
@@ -99,7 +101,7 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    post_list = Post.objects.filter(author__following__user=request.user).all()
+    post_list = Post.objects.filter(author__following__user=request.user)
     context = {
         'page_obj': get_page_context(post_list, request),
     }

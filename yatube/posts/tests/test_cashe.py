@@ -1,14 +1,11 @@
-from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from ..models import Group, Post
-
-User = get_user_model()
+from ..models import Group, Post, User
 
 
-class PaginatorViewsTest(TestCase):
+class CasheTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -18,7 +15,6 @@ class PaginatorViewsTest(TestCase):
             password='Qwerty123',
         )
         cls.authorized_client = Client()
-        cls.authorized_client.force_login(cls.test_user)
         cls.group = Group.objects.create(
             title='Тестовый заголовок',
             slug='test-group',

@@ -11,14 +11,14 @@ class FollowTest(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.test_author_janka = User.objects.create(
-            username='test_janka',
-            email='janka_kupala@gmail.com',
-            password='Ludzmi_zvacca_1918',
+            username='test',
+            email='ja@gmail.com',
+            password='L1918',
         )
         cls.test_user_kastus = User.objects.create(
             username='test_kastus',
-            email='kastus_1863@gmail.com',
-            password='Kaho_lubis_1863',
+            email='k1863@gmail.com',
+            password='Ka_1863',
         )
 
     def setUp(self):
