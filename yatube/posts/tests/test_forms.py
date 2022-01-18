@@ -136,24 +136,20 @@ class ImageFormsTest(TestCase):
 
     def test_posts_form_create_post_with_image(self):
         """Валидная форма создает новый пост с картинкой."""
-        post = Post.objects.create(
-            group=self.group,
-            text='Тестовый текст',
-            author=self.test_user,
-        )
-        posts_count = Post.objects.count()
+        posts_before = Post.objects.count()
         group = ImageFormsTest.group.id
-        form_data = {'author': ImageFormsTest.user,
-                     'text': 'Текст №2',
+        form_data = {'text': 'Текст №2',
                      'group': group,
                      'image': ImageFormsTest.uploaded}
 
         response = self.authorized_client.post(
-            reverse('posts:post_edit', kwargs={'post_id': post.id, }),
+            reverse('posts:post_create'),
             data=form_data,
             follow=True,
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(Post.objects.count(), posts_count)
-        edited_post = Post.objects.get(id=post.id)
-        self.assertEqual(edited_post.group.id, form_data['group'])
+        self.assertEqual(Post.objects.count(), posts_before + 1)
+        last_post = Post.objects.last()
+        self.assertEqual(last_post.text, form_data['text'])
+        self.assertEqual(last_post.group.id, form_data['group'])
+        self.assertTrue(last_post.image, form_data['image'])

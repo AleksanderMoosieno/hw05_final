@@ -2,36 +2,30 @@ from django.core.cache import cache
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from ..models import Group, Post, User
+from ..models import Post, User
 
 
-class CasheTest(TestCase):
+class CacheTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.test_user = User.objects.create(
-            username='test_username',
-            email='testmail@gmail.com',
-            password='Qwerty123',
-        )
-        cls.authorized_client = Client()
-        cls.group = Group.objects.create(
-            title='Тестовый заголовок',
-            slug='test-group',
-            description='Тестовое описание',
-        )
+
+        cls.no_user_name = 'noUserName'
+        cls.user = User.objects.create_user(username=cls.no_user_name)
         cls.post = Post.objects.create(
-            author=cls.test_user,
-            group=cls.group,
-            text='Тестовый текст',
+            author=cls.user,
+            text='Тестовый пост',
         )
+
+    def setUp(self):
+        self.guest_client = Client()
 
     def test_cache_on_index_page_works_correct(self):
         """Кэширование данных на главной странице работает корректно."""
-        response = self.authorized_client.get(reverse('posts:index'))
+        response = self.guest_client.get(reverse('posts:index'))
         cached_content = response.content
         Post.objects.all().delete()
-        response = self.authorized_client.get(reverse('posts:index'))
+        response = self.guest_client.get(reverse('posts:index'))
         cached_content_after_delete = response.content
         self.assertEqual(
             cached_content,
@@ -39,7 +33,7 @@ class CasheTest(TestCase):
             'Кэширование работает некорректно.'
         )
         cache.clear()
-        response = self.authorized_client.get(reverse('posts:index'))
+        response = self.guest_client.get(reverse('posts:index'))
         self.assertNotEqual(
             cached_content,
             response.content,
