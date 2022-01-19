@@ -3,7 +3,11 @@
     <ul class="nav nav-tabs">
       <li class="nav-item">
         <a 
-          class="nav-link"
+          class="nav-link 
+          {% if index %}
+          {% else %}
+           active
+          {% endif %}"
           href="{% url 'posts:index' %}"
         >
           Все авторы
@@ -11,7 +15,11 @@
       </li>
       <li class="nav-item">
         <a 
-           class="nav-link"
+           class="nav-link 
+           {% if follow %}
+            active
+           {% else %}
+           {% endif %}"
            href="{% url 'posts:follow_index' %}"
         >
           Избранные авторы
