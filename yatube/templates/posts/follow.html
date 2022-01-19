@@ -6,7 +6,7 @@
 
 {% block content %}
   <div class="container"><p>
-    {% include 'posts/includes/switcher.html' %}
+    {% include "posts/includes/switcher.html" with follow=True %}
       {% load cache %}
         {% cache 20 page_obj %}
           {% for post in page_obj %}
